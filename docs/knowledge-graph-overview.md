@@ -5,7 +5,7 @@ This document outlines the overview of an AI Agent with RAG (Retrieval-Augmented
 
 ## Requirements
 - Load all settings from environment file (.env)
-- Index all documents and files in GitHub Repository based on list of URLs provided using Github MCP tool
+- Index all documents and files in GitHub Repository based on list of URLs provided in `appSettings.json` using Github MCP tool
 - Using Python language for AI Agent
 - Using LangChain framework to build AI Agent, and LangGraph to manage workflows
 - Integration with LLM models (e.g.OpenAI...)
@@ -35,13 +35,13 @@ graph TB
     subgraph "Document Processing Pipeline"
         DL[Document Loaders]
         TP[Text Processor]
-        CH[Chunking Strategy]
+        CHUNK[Chunking Strategy]
         EM[Embeddings Generator]
     end
     
     %% Vector Storage
     subgraph "Vector Storage"
-        CH[Pinecone]
+        PC[Pinecone]
     end
     
     %% AI Agent Core
@@ -56,7 +56,7 @@ graph TB
     %% API Layer
     subgraph "API Layer"
         API[REST API]
-        Auth[Authentication]
+        AUTH[Authentication]
     end
     
     %% Monitoring & Logging
@@ -65,31 +65,26 @@ graph TB
         HEALTH[Health Check]
     end
     
-    %% Data Flow
+    %% Data Flow - Document Processing
     GH --> DL
-    
     DL --> TP
-    TP --> CH
-    CH --> EM
+    TP --> CHUNK
+    CHUNK --> EM
+    EM --> PC
     
-    EM --> CH
-    EM --> PG
-    
-    API --> Auth
-    Auth --> RL
-    RL --> QP
-    
+    %% Data Flow - Query Processing
+    API --> AUTH
+    AUTH --> QP
     QP --> CR
-    CR --> CH
-    CR --> PG
-    
+    CR --> PC
     CR --> RA
     RA --> PM
     PM --> LLM
-    LLM --> RA
-    
+    LLM --> PM
+    PM --> RA
     RA --> API
     
+    %% Monitoring Connections
     API --> LOG
     API --> HEALTH
 ```
