@@ -9,7 +9,7 @@ This document outlines the overview of an AI Agent with RAG (Retrieval-Augmented
 - Using Python language for AI Agent
 - Using LangChain framework to build AI Agent, and LangGraph to manage workflows
 - Integration with LLM models (e.g.OpenAI...)
-- Using vector database with Pinecone
+- Using vector database with Pinecone and Chroma
 
 ## Architecture Overview
 
@@ -155,6 +155,7 @@ knowledge-graph-agent/
 │   ├── vectorstores/
 │   │   ├── __init__.py
 │   │   ├── base_store.py
+│   │   ├── chroma_store.py
 │   │   ├── pinecone_store.py
 │   ├── llm/
 │   │   ├── __init__.py
@@ -216,6 +217,11 @@ EMBEDDING_PROVIDER=openai
 EMBEDDING_MODEL=text-embedding-ada-002
 
 # Vector Database Configuration
+DATABASE_TYPE=chroma #This configuration to allow switch vector store between chroma and pinecone
+CHROMA_HOST=localhost
+CHROMA_PORT=8000
+CHROMA_COLLECTION_NAME=knowledge-base-graph
+
 PINECONE_API_KEY=pinecone-api-key
 PINECONE_COLLECTION_NAME=knowledge-base-graph
 
@@ -229,7 +235,7 @@ LOG_LEVEL=INFO #DEBUG
 CHUNK_SIZE=1000
 CHUNK_OVERLAP=200
 MAX_TOKENS=4000
-TEMPERATURE=0.9
+TEMPERATURE=0.7
 ```
 
 ## References

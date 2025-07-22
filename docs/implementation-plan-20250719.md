@@ -15,9 +15,10 @@ This implementation plan delivers a focused 2-week MVP for the Knowledge Graph A
 ### In Scope (MVP Features)
 - ✅ Basic GitHub repository indexing (single repository)
 - ✅ Simple document chunking and embedding generation
-- ✅ Pinecone vector storage integration
+- ✅ Pinecone and Chroma vector storage integration
 - ✅ Basic RAG query processing with OpenAI
 - ✅ Minimal REST API (index and query endpoints)
+- ✅ Basic Web user interface
 - ✅ Environment-based configuration
 - ✅ Basic error handling and logging
 
@@ -27,7 +28,6 @@ This implementation plan delivers a focused 2-week MVP for the Knowledge Graph A
 - ❌ Authentication and authorization
 - ❌ Comprehensive monitoring and metrics
 - ❌ Incremental indexing capabilities
-- ❌ Web user interface
 - ❌ Advanced error recovery mechanisms
 - ❌ Performance optimization and scaling
 
@@ -59,7 +59,7 @@ graph TB
 ### Technology Stack
 - **Backend Framework:** FastAPI
 - **AI/ML Framework:** LangChain
-- **Vector Database:** Pinecone
+- **Vector Database:** Chroma, Pinecone
 - **LLM Provider:** OpenAI (GPT-4o-mini)
 - **Embeddings:** OpenAI text-embedding-ada-002
 - **Version Control Integration:** GitHub API
@@ -78,6 +78,7 @@ knowledge-graph-agent/
 │   ├── processors/
 │   │   └── document_processor.py    # Text processing and chunking
 │   ├── vectorstores/
+│   │   └── chroma_store.py          # Chroma integration
 │   │   └── pinecone_store.py        # Pinecone integration
 │   ├── agents/
 │   │   └── rag_agent.py             # RAG pipeline implementation
@@ -114,7 +115,7 @@ knowledge-graph-agent/
 
 **Task 1.3: Environment Configuration (6 hours)**
 - Implement `src/config/settings.py` with Pydantic models
-- Support for OpenAI, Pinecone, and GitHub credentials
+- Support for OpenAI, Chroma, Pinecone, and GitHub credentials
 - Create `.env.example` with required variables
 - Add basic validation and error handling
 
@@ -124,6 +125,7 @@ knowledge-graph-agent/
 - Implement `src/loaders/github_loader.py`
 - GitHub API integration for content extraction
 - Support single repository with configurable file extensions
+- Support public and private Github repository
 - Basic file content retrieval and metadata extraction
 - Handle authentication with GitHub tokens
 
@@ -132,13 +134,16 @@ knowledge-graph-agent/
 - Implement text cleaning and preprocessing
 - Simple recursive character text splitter
 - Fixed chunk size (1000 chars) with 200 char overlap
-- Metadata preservation (file path, repository info)
+- Metadata preservation (file path, file type, line start, line end, repository info)
 
 #### **Day 5: Vector Storage Setup**
 
 **Task 1.6: Pinecone Integration (8 hours)**
+- Implement `src/vectorstores/chroma_store.py`
 - Implement `src/vectorstores/pinecone_store.py`
+- Chroma client setup and index management
 - Pinecone client setup and index management
+- Allow switch between Chroma and Pinecon based on `DATABASE_TYPE` in environment setting
 - Document embedding using OpenAI text-embedding-ada-002
 - Batch upsert functionality for storing embeddings
 - Basic error handling for connection and API issues
